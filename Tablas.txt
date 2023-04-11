@@ -1,0 +1,9 @@
+CREATE TABLE Articulos (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    ItemCode VARCHAR(300) UNIQUE,
+    ItemName VARCHAR(300) UNIQUE,
+    TypeItem VARCHAR(300),
+    Quantity INT,
+    Price double,
+    CreateDate  DATE 
+);

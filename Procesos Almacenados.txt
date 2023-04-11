@@ -1,0 +1,8 @@
+BEGIN
+    SELECT * FROM Articles
+    WHERE (p_id IS NULL OR id = p_id)
+        AND (p_typeItem IS NULL OR TypeItem = p_typeItem)
+        AND (p_createDate IS NULL OR CreateDate = p_createDate)
+        AND (p_startDate IS NULL OR CreateDate >= p_startDate)
+        AND (p_endDate IS NULL OR CreateDate <= p_endDate);
+END
