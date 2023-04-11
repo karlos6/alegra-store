@@ -1,11 +1,8 @@
 import 'dart:math';
 
 import 'package:alegra_store/src/data/http/reporteHttp.dart';
-import 'package:alegra_store/src/domain/requests/reporte_filtro_request.dart';
 import 'package:alegra_store/src/domain/requests/reporte_request.dart';
 import 'package:alegra_store/src/ui/pages/reportes/reporte_controller.dart';
-import 'package:alegra_store/src/ui/utilities/mensajesAlerta.dart';
-import 'package:alegra_store/src/ui/utilities/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -20,28 +17,23 @@ class ReportePage extends StatefulWidget {
 
 class _ReportePageState extends State<ReportePage> {
   ScrollController scrollController = ScrollController();
-  final _formKey = GlobalKey<FormState>();
-
+  bool isVisible = true;
   final _actualizadoInputFechaIngreso = TextEditingController();
   final _actualizadoInputFechaSalida = TextEditingController();
   final ReporteController _reporteController = ReporteController();
-  final ReporteFiltroRequest _reporteFiltroRequest = ReporteFiltroRequest();
-
+  List<ReporteRequest> _listaReportes = [];
   int _currentSortColumn = 0;
   bool _isAscending = true;
-  bool isVisible = true;
-
-  Future<List<ReporteRequest>> _listaReportes = Future.value([]);
 
   @override
   void initState() {
     super.initState();
     _inicializacion();
-    _listaReportes = _reporteController.reporteGeneral();
   }
 
   _inicializacion() async {
     inicializarControlerScroll();
+    _listaReportes = await _reporteController.reporteGeneral();
   }
 
   inicializarControlerScroll() {
@@ -69,11 +61,11 @@ class _ReportePageState extends State<ReportePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        //drawer: Container(),
+        drawer: Container(),
         appBar: AppBar(
           title: const Text('Reportes'),
         ),
-        drawer: Menu(),
+        //drawer: MenuPorteroWidget(),
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
         body: _body(),
@@ -103,18 +95,7 @@ class _ReportePageState extends State<ReportePage> {
             scrollDirection: Axis.horizontal,
             child: Column(
               children: [
-                FutureBuilder(
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        if (snapshot.data!.isEmpty) {
-                          return const Center(child: Text("No hay datos"));
-                        }
-                        return _tablaDatos(snapshot.data!);
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                    },
-                    future: _listaReportes)
+                _tablaDatos(),
               ],
             ),
           ),
@@ -150,11 +131,11 @@ class _ReportePageState extends State<ReportePage> {
     );
   }
 
-  DataTable _tablaDatos(List<ReporteRequest> listaReportes) {
+  DataTable _tablaDatos() {
     return DataTable(
       sortColumnIndex: _currentSortColumn,
       sortAscending: _isAscending,
-      rows: listaReportes.map((item) {
+      rows: _listaReportes.map((item) {
         return DataRow(cells: [
           DataCell(Text(item.itemCode.toString())),
           DataCell(Text(item.itemName)),
@@ -176,12 +157,12 @@ class _ReportePageState extends State<ReportePage> {
                 if (_isAscending == true) {
                   _isAscending = false;
                   // sort the product list in Ascending, order by nombre
-                  listaReportes.sort((productA, productB) =>
+                  _listaReportes.sort((productA, productB) =>
                       (productB.itemName.compareTo(productA.itemName)));
                 } else {
                   _isAscending = true;
                   // sort the product list in Descending, order by nombre
-                  listaReportes.sort((productA, productB) =>
+                  _listaReportes.sort((productA, productB) =>
                       productA.itemName.compareTo(productB.itemName));
                 }
               });
@@ -194,12 +175,12 @@ class _ReportePageState extends State<ReportePage> {
                 if (_isAscending == true) {
                   _isAscending = false;
                   // sort the product list in Ascending, order by tipo
-                  listaReportes.sort((productA, productB) =>
+                  _listaReportes.sort((productA, productB) =>
                       productB.typeItem.compareTo(productA.typeItem));
                 } else {
                   _isAscending = true;
                   // sort the product list in Descending, order by tipo
-                  listaReportes.sort((productA, productB) =>
+                  _listaReportes.sort((productA, productB) =>
                       productA.typeItem.compareTo(productB.typeItem));
                 }
               });
@@ -216,12 +197,12 @@ class _ReportePageState extends State<ReportePage> {
                 if (_isAscending == true) {
                   _isAscending = false;
                   // sort the product list in Ascending, order by precio
-                  listaReportes.sort((productA, productB) =>
+                  _listaReportes.sort((productA, productB) =>
                       productB.price.compareTo(productA.price));
                 } else {
                   _isAscending = true;
                   // sort the product list in Descending, order by precio
-                  listaReportes.sort((productA, productB) =>
+                  _listaReportes.sort((productA, productB) =>
                       productA.price.compareTo(productB.price));
                 }
               });
@@ -248,19 +229,21 @@ class _ReportePageState extends State<ReportePage> {
               ),
             ),
             content: Form(
-              key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  _nombreArticuloText(),
+                  SizedBox(height: Adapt.wp(3, context)),
                   _tipoArticuloText(),
-                  SizedBox(height: Adapt.hp(3, context)),
-                  const Text("Rango de fechas",
+                  SizedBox(height: Adapt.wp(6, context)),
+                  Text("Rango de fechas",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  SizedBox(height: Adapt.hp(2, context)),
+                  SizedBox(height: Adapt.wp(1, context)),
                   _fechaInicioText(),
-                  SizedBox(height: Adapt.hp(3, context)),
+                  SizedBox(height: Adapt.wp(3, context)),
                   _fechaFinalText(),
+                  SizedBox(height: Adapt.wp(3, context)),
                 ],
               ),
             ),
@@ -277,23 +260,7 @@ class _ReportePageState extends State<ReportePage> {
                     setState(() {});
                   },
                   child: const Text("Limpiar")),
-              TextButton(
-                  onPressed: () {
-                    _formKey.currentState!.save();
-                    if (_reporteFiltroRequest.fechaFin.isEmpty &&
-                        _reporteFiltroRequest.fechaInicio.isEmpty &&
-                        _reporteFiltroRequest.tipo.isEmpty) {
-                      mensajeAlerta(context, "Alerta Filtro",
-                          "Ingrese al menos un filtro para realizar la busqueda");
-                    } else {
-                      Navigator.pop(context);
-                      //  _listaReportes.clear();
-                      _listaReportes = _reporteController
-                          .reporteFiltrado(_reporteFiltroRequest);
-                      setState(() {});
-                    }
-                  },
-                  child: const Text("Filtrar")),
+              TextButton(onPressed: () async {}, child: const Text("Filtrar")),
             ],
           );
         });
@@ -302,7 +269,9 @@ class _ReportePageState extends State<ReportePage> {
   Widget _fechaInicioText() {
     return TextFormField(
       controller: _actualizadoInputFechaIngreso,
-      onSaved: (value) => _reporteFiltroRequest.fechaInicio = value!,
+      onSaved: (value) {
+        if (value != null) {}
+      },
       //validator: (value) => value!.isEmpty ? 'Ingrese la fecha' : null,
       onTap: () async {
         DateTime? newDateTime = await showDatePicker(
@@ -331,12 +300,6 @@ class _ReportePageState extends State<ReportePage> {
       maxLength: 50,
       keyboardType: TextInputType.emailAddress,
       decoration: const InputDecoration(
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue),
-        ),
         prefixIcon: Icon(Icons.calendar_month_outlined),
         counterText: "",
         hintText: 'Seleccione la fecha de inicio',
@@ -355,7 +318,9 @@ class _ReportePageState extends State<ReportePage> {
   Widget _fechaFinalText() {
     return TextFormField(
       controller: _actualizadoInputFechaSalida,
-      onSaved: (value) => _reporteFiltroRequest.fechaFin = value!,
+      onSaved: (value) {
+        if (value != null) {}
+      },
       onTap: () async {
         DateTime? newDateTime = await showDatePicker(
             builder: (BuildContext context, Widget? child) {
@@ -383,12 +348,6 @@ class _ReportePageState extends State<ReportePage> {
       maxLength: 50,
       keyboardType: TextInputType.emailAddress,
       decoration: const InputDecoration(
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue),
-        ),
         prefixIcon: Icon(Icons.calendar_month_outlined),
         hintText: 'Seleccione la fecha de fin',
         counterText: "",
@@ -404,36 +363,68 @@ class _ReportePageState extends State<ReportePage> {
     );
   }
 
-  Widget _tipoArticuloText() {
+  Widget _nombreArticuloText() {
     return TextFormField(
-      onSaved: (value) => _reporteFiltroRequest.tipo = value!,
+      //onSaved: (value) => _visitanteModelRequest.completeName = value!,
       validator: (value) {
-        if (value != null) {
-          //minimo 4
-          if (value.length < 4) {
-            return 'El nombre debe tener minimo 4 caracteres';
-          }
-          //maximo 50
-          if (value.length > 60) {
-            return 'El nombre debe tener maximo 60 caracteres';
-          }
-          if (!RegExp(r"^[a-zA-Z ]+$").hasMatch(value)) {
-            return 'Solo se permiten letras';
-          }
+        if (value!.isEmpty) {
+          return 'Este campo es requerido';
         }
-
+        //minimo 4
+        if (value.length < 4) {
+          return 'El nombre debe tener minimo 4 caracteres';
+        }
+        //maximo 50
+        if (value.length > 60) {
+          return 'El nombre debe tener maximo 60 caracteres';
+        }
+        if (!RegExp(r"^[a-zA-Z ]+$").hasMatch(value)) {
+          return 'Solo se permiten letras';
+        }
         return null;
       },
       style: const TextStyle(color: Colors.black),
       maxLength: 50,
-      keyboardType: TextInputType.text,
+      keyboardType: TextInputType.emailAddress,
       decoration: const InputDecoration(
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue),
+        prefixIcon: Icon(Icons.shopping_cart_outlined),
+        hintText: 'Ingrese el nombre de la visita',
+        counterText: "",
+        label: Text(
+          'Nombre del articulo',
+          style: TextStyle(
+            color: Colors.black,
+          ),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue),
-        ),
+        labelStyle: TextStyle(color: Colors.black),
+      ),
+    );
+  }
+
+  Widget _tipoArticuloText() {
+    return TextFormField(
+      //onSaved: (value) => _visitanteModelRequest.completeName = value!,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Este campo es requerido';
+        }
+        //minimo 4
+        if (value.length < 4) {
+          return 'El nombre debe tener minimo 4 caracteres';
+        }
+        //maximo 50
+        if (value.length > 60) {
+          return 'El nombre debe tener maximo 60 caracteres';
+        }
+        if (!RegExp(r"^[a-zA-Z ]+$").hasMatch(value)) {
+          return 'Solo se permiten letras';
+        }
+        return null;
+      },
+      style: const TextStyle(color: Colors.black),
+      maxLength: 50,
+      keyboardType: TextInputType.emailAddress,
+      decoration: const InputDecoration(
         prefixIcon: Icon(Icons.shopping_bag_outlined),
         hintText: 'Ingrese el tipo de articulo',
         counterText: "",

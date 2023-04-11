@@ -22,7 +22,7 @@ class _RoutesState extends State<Routes> {
       initialRoute: '/',
       routes: {
         '/': (context) => ReportePage(),
-        'informe': (context) => ReportePage(),
+        '/second': (context) => Container(),
       },
     );
   }
