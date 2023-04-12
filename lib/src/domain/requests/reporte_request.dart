@@ -11,12 +11,12 @@ class ReporteRequest {
 
   ReporteRequest.fromJson(Map<String, dynamic> json) {
     id = json['id'].toString();
-    itemCode = json['ItemCode'];
-    itemName = json['ItemName'];
-    typeItem = json['TypeItem'];
-    quantity = json['Quantity'];
-    price = json['Price'];
-    createDate = json['CreateDate'];
+    itemCode = json['ItemCode'] ?? '';
+    itemName = json['ItemName'] ?? '';
+    typeItem = json['TypeItem'] ?? '';
+    quantity = json['Quantity'] ?? 0;
+    price = json['Price'] ?? 0;
+    createDate = json['CreateDate'] ?? '';
   }
 
   Map<String, dynamic> toJson() => {

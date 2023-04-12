@@ -18,8 +18,6 @@ class _MenuState extends State<Menu> {
             padding: const EdgeInsets.all(0),
             decoration: BoxDecoration(),
             child: SizedBox(
-              width: 160,
-              height: 140,
               child: Image.asset(
                 "assets/img/alegra_lingh.jpeg",
                 fit: BoxFit.fill,
