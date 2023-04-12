@@ -1,4 +1,5 @@
 import 'package:alegra_store/src/ui/pages/reportes/reporte_page.dart';
+import 'package:alegra_store/src/ui/pages/scanner/scanner_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -19,10 +20,11 @@ class _RoutesState extends State<Routes> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: '/informe',
       routes: {
         '/': (context) => ReportePage(),
         'informe': (context) => ReportePage(),
+        'scanner': (context) => const ScannerPage(),
       },
     );
   }
