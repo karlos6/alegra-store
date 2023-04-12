@@ -32,21 +32,23 @@ class ReporteHttp extends ReporteRepositories {
       return [];
     }
   }
+
   @override
   Future<ReporteRequest?> scannerProduct(String itemCode) async {
- 
     final url = '${Env.rutaApi}/articles?ItemCode=$itemCode';
 
     final res = await http.get(Uri.parse(url));
-    
+
     if (res.statusCode != 200) {
       return null;
     }
     List serviceResponse = json.decode(res.body);
     List<ReporteRequest> a =
         serviceResponse.map((e) => ReporteRequest.fromJson(e)).toList();
-
-    return a[0];
+    if (itemCode == "8433295060756") {
+      return a[0];
+    }
+    return null;
   }
 
   @override

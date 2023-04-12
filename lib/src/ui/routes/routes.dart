@@ -20,11 +20,11 @@ class _RoutesState extends State<Routes> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/scanner',
+      initialRoute: '/informe',
       routes: {
         '/': (context) => ReportePage(),
         'informe': (context) => ReportePage(),
-        '/scanner': (context) => const ScannerPage(),
+        'scanner': (context) => const ScannerPage(),
       },
     );
   }

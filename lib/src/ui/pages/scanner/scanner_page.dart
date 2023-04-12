@@ -2,10 +2,9 @@
 
 import 'package:alegra_store/src/domain/requests/reporte_request.dart';
 import 'package:alegra_store/src/ui/pages/scanner/scanner_controller.dart';
+import 'package:alegra_store/src/ui/utilities/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-
-
 
 class ScannerPage extends StatefulWidget {
   const ScannerPage({Key? key}) : super(key: key);
@@ -19,7 +18,12 @@ class _ScannerPageState extends State<ScannerPage> {
   final _reporteController = ScannerController();
   ReporteRequest producto = ReporteRequest();
 
+  void _resetReoirt() {
+    producto = ReporteRequest();
+  }
+
   leerCodigo(BuildContext context) async {
+    _resetReoirt();
     barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
         '#3D8BEF', 'Cancelar', false, ScanMode.BARCODE);
 
@@ -29,14 +33,16 @@ class _ScannerPageState extends State<ScannerPage> {
     ReporteRequest? data =
         await _reporteController.scannerProduct(barcodeScanRes);
     if (data != null) {
-      //producto = data;
-      barcodeScanRes = "sdas";
-      setState(() {});
+      producto.itemName = data.itemName;
+      producto.itemCode = data.itemCode;
+      producto.quantity = data.quantity;
+
+     
     } else {
       displayDialogAndroid(context, barcodeScanRes);
     }
 
-    // setState(() {});
+    setState(() {});
   }
 
   Widget obtnerVista() {
@@ -51,18 +57,25 @@ class _ScannerPageState extends State<ScannerPage> {
   }
 
   List<Widget> productData(TextStyle fontSize30) {
-    return [
-      Text('Información producto', style: fontSize30),
-      Text('Nombre: ${producto.itemName}', style: fontSize30),
-      Text('Código: ${producto.itemCode}', style: fontSize30),
-      Text('Existencias: ${producto.quantity}', style: fontSize30),
-    ];
+    List<Widget> data;
+    if (producto.itemName != "") {
+      data = [
+        Text('Información producto', style: fontSize30),
+        Text('Nombre: ${producto.itemName}', style: fontSize30),
+        Text('Código: ${producto.itemCode}', style: fontSize30),
+        Text('Existencias: ${producto.quantity}', style: fontSize30),
+      ];
+    } else {
+      data = [];
+    }
+    return data;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(elevation: 0, title: const Text('Scanner Productos')),
+      drawer: Menu(),
       body: Center(
         child: obtnerVista(),
       ),

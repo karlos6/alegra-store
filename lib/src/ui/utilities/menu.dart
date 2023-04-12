@@ -47,7 +47,7 @@ class _MenuState extends State<Menu> {
               style: TextStyle(color: Colors.blueGrey[600]),
             ),
             onTap: () {
-              //Navigator.pushNamed(context, 'informe');
+              Navigator.pushNamed(context, 'scanner');
             },
           ),
           Divider(),
