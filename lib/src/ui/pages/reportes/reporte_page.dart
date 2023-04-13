@@ -27,6 +27,14 @@ class _ReportePageState extends State<ReportePage> {
   final ReporteController _reporteController = ReporteController();
   final ReporteFiltroRequest _reporteFiltroRequest = ReporteFiltroRequest();
 
+  final List<String> _listaTipoArticulos = [
+    "Alimentos",
+    "Bebidas",
+    "Higiene personal",
+    "Limpieza del hogar",
+    "Bebés",
+    "Juguetes"
+  ];
   int _currentSortColumn = 0;
   bool _isAscending = true;
   bool isVisible = true;
@@ -252,7 +260,7 @@ class _ReportePageState extends State<ReportePage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _tipoArticuloText(),
+                  _listaTipoArticulo(),
                   SizedBox(height: Adapt.hp(3, context)),
                   const Text("Rango de fechas",
                       style:
@@ -274,6 +282,8 @@ class _ReportePageState extends State<ReportePage> {
                   onPressed: () async {
                     _actualizadoInputFechaIngreso.text = "";
                     _actualizadoInputFechaSalida.text = "";
+                    Navigator.pop(context);
+                    _listaReportes = _reporteController.reporteGeneral();
                     setState(() {});
                   },
                   child: const Text("Limpiar")),
@@ -297,6 +307,62 @@ class _ReportePageState extends State<ReportePage> {
             ],
           );
         });
+  }
+
+  Widget _listaTipoArticulo() {
+    return DropdownButtonFormField<String>(
+      hint: const Text('Seleccione una tipo',
+          style: TextStyle(
+            color: Colors.black,
+            fontFamily: 'CaviarDreamsRegular',
+          )),
+      onSaved: (value) => _reporteFiltroRequest.tipo = value!,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Seleccione una tipo';
+        }
+        return null;
+      },
+      isExpanded: true,
+      icon: const Icon(Icons.arrow_downward),
+      elevation: 16,
+      style: const TextStyle(
+        color: Colors.black,
+      ),
+      items: _listaTipoArticulos.map((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value,
+              style: const TextStyle(
+                color: Colors.black,
+                fontFamily: 'CaviarDreamsRegular',
+              )),
+        );
+      }).toList(),
+      onChanged: (String? newValue) {
+        setState(() {
+          newValue;
+        });
+      },
+      decoration: const InputDecoration(
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.blue),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.blue),
+        ),
+        prefixIcon: Icon(Icons.calendar_month_outlined),
+        counterText: "",
+        hintText: 'Seleccione un tipo de articulo',
+        label: Text(
+          'Tipo de articulo',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        labelStyle: TextStyle(color: Colors.black),
+      ),
+    );
   }
 
   Widget _fechaInicioText() {
