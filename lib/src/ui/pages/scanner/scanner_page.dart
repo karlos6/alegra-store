@@ -105,7 +105,7 @@ class _ScannerPageState extends State<ScannerPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                    "El códido '$cod' no se encuentra regsitrado con ningun producto"),
+                    "El código '$cod' no se encuentra asociado a ningún producto."),
               ],
             ),
             actions: [
