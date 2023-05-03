@@ -18,9 +18,6 @@ class ReporteHttp extends ReporteRepositories {
         Uri.parse(url),
       );
 
-      print('res ${res.body}');
-      print(res.statusCode);
-
       if (res.statusCode == 200) {
         List serviceResponse = json.decode(res.body);
         return serviceResponse.map((e) => ReporteRequest.fromJson(e)).toList();
@@ -28,7 +25,6 @@ class ReporteHttp extends ReporteRepositories {
         return [];
       }
     } catch (e) {
-      print('error $e');
       return [];
     }
   }
@@ -62,9 +58,6 @@ class ReporteHttp extends ReporteRepositories {
         Uri.parse(url),
       );
 
-      print('res ${res.body}');
-      print(res.statusCode);
-
       if (res.statusCode == 200) {
         List serviceResponse = json.decode(res.body);
         return serviceResponse.map((e) => ReporteRequest.fromJson(e)).toList();
@@ -72,7 +65,6 @@ class ReporteHttp extends ReporteRepositories {
         return [];
       }
     } catch (e) {
-      print('error $e');
       return [];
     }
   }

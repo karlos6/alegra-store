@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:alegra_store/src/data/http/reporteHttp.dart';
 import 'package:alegra_store/src/domain/requests/reporte_filtro_request.dart';
 import 'package:alegra_store/src/domain/requests/reporte_request.dart';
 import 'package:alegra_store/src/ui/pages/reportes/reporte_controller.dart';
@@ -81,7 +78,7 @@ class _ReportePageState extends State<ReportePage> {
         appBar: AppBar(
           title: const Text('Reportes'),
         ),
-        drawer: Menu(),
+        drawer: const Menu(),
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
         body: _body(),
@@ -427,7 +424,7 @@ class _ReportePageState extends State<ReportePage> {
             builder: (BuildContext context, Widget? child) {
               return Theme(
                 data: ThemeData.light().copyWith(
-                  colorScheme: ColorScheme.light(),
+                  colorScheme: const ColorScheme.light(),
                 ),
                 child: child!,
               );

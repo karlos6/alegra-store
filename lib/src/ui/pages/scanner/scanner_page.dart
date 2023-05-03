@@ -75,7 +75,7 @@ class _ScannerPageState extends State<ScannerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(elevation: 0, title: const Text('Scanner Productos')),
-      drawer: Menu(),
+      drawer: const Menu(),
       body: Center(
         child: obtnerVista(),
       ),

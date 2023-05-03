@@ -1,8 +1,8 @@
+import 'package:alegra_store/src/ui/pages/producto/lista_producto_page.dart';
+import 'package:alegra_store/src/ui/pages/producto/registrar_producto_page.dart';
 import 'package:alegra_store/src/ui/pages/reportes/reporte_page.dart';
 import 'package:alegra_store/src/ui/pages/scanner/scanner_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class Routes extends StatefulWidget {
   const Routes({super.key});
@@ -20,11 +20,13 @@ class _RoutesState extends State<Routes> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/informe',
+      initialRoute: 'lista_articulo',
       routes: {
-        '/': (context) => ReportePage(),
-        'informe': (context) => ReportePage(),
+        '/': (context) => const RegistrarArticuloPage(),
+        'informe': (context) => const ReportePage(),
         'scanner': (context) => const ScannerPage(),
+        'registrar_articulo': (context) => const RegistrarArticuloPage(),
+        'lista_articulo': (context) => const ListaArticulo(),
       },
     );
   }
