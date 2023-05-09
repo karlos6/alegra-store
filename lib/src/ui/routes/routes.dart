@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
+import '../pages/repor_ventas/report_ventas_page.dart';
+
 class Routes extends StatefulWidget {
   const Routes({super.key});
 
@@ -25,6 +27,7 @@ class _RoutesState extends State<Routes> {
         '/': (context) => ReportePage(),
         'informe': (context) => ReportePage(),
         'scanner': (context) => const ScannerPage(),
+        'reportVentas': (context) => const ReporVentas()
       },
     );
   }

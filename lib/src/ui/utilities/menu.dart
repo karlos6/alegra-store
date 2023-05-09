@@ -48,7 +48,19 @@ class _MenuState extends State<Menu> {
               Navigator.pushNamed(context, 'scanner');
             },
           ),
-          Divider(),
+          ListTile(
+            leading: const Icon(
+              Icons.wysiwyg_outlined,
+            ),
+            title: Text(
+              'Reporte ventas',
+              style: TextStyle(color: Colors.blueGrey[600]),
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, 'reportVentas');
+            },
+          ),
+          const Divider(),
           ListTile(
             leading: const Icon(
               Icons.logout,
