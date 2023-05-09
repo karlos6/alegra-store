@@ -4,6 +4,8 @@ import 'package:alegra_store/src/ui/pages/reportes/reporte_page.dart';
 import 'package:alegra_store/src/ui/pages/scanner/scanner_page.dart';
 import 'package:flutter/material.dart';
 
+import '../pages/producto/detalles_producto_page.dart';
+
 class Routes extends StatefulWidget {
   const Routes({super.key});
 
@@ -27,6 +29,7 @@ class _RoutesState extends State<Routes> {
         'scanner': (context) => const ScannerPage(),
         'registrar_articulo': (context) => const RegistrarArticuloPage(),
         'lista_articulo': (context) => const ListaArticulo(),
+        "detalles_producto": (context) => const DetallesProductoPage(),
       },
     );
   }

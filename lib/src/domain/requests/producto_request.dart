@@ -7,6 +7,9 @@ class ProductoRequest {
   int cantidad = 0;
   int peso = 0;
   String descripcion = '';
+  int precioVenta = 0;
+  int precioCompra = 0;
+  int idCategory = 0;
 
   //int precio = 0;
 
@@ -21,18 +24,22 @@ class ProductoRequest {
     fechaIngreso = json['entryDate'] ?? '';
     fechaExpiracion = json['expirationDate'] ?? '';
     descripcion = json['description'] ?? '';
-    //precio = json['Price'] ?? 0;
+    precioVenta = json['salePrice'] ?? 0;
+    precioCompra = json['purchasePrice'] ?? 0;
+    idCategory = json['idCategory'] ?? 0;
   }
 
   Map<String, dynamic> toJson() => {
         'code': codigo,
         'name': nombre,
-        'categoryName': categoria,
-        'quantity': cantidad,
-        'expirationDate': fechaExpiracion,
-        'entryDate': fechaIngreso,
+        'idCategory': idCategory,
+        "categoryName": categoria,
         'weight': peso,
+        'quantity': cantidad,
+        'purchasePrice': precioCompra,
+        'salePrice': precioVenta,
+        'entryDate': fechaIngreso,
+        'expirationDate': fechaExpiracion,
         'description': descripcion,
-        //'Price': precio,
       };
 }

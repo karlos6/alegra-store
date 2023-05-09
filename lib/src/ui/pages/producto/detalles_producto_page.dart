@@ -1,45 +1,25 @@
-import 'package:alegra_store/src/domain/requests/categoria_producto_request.dart';
 import 'package:alegra_store/src/domain/requests/producto_request.dart';
-import 'package:alegra_store/src/ui/pages/producto/producto_controller.dart';
 import 'package:flutter/material.dart';
+
 import '../../utilities/responsive.dart';
 
-class RegistrarArticuloPage extends StatefulWidget {
-  const RegistrarArticuloPage({super.key});
+class DetallesProductoPage extends StatefulWidget {
+  const DetallesProductoPage({super.key});
 
   @override
-  State<RegistrarArticuloPage> createState() => _RegistrarArticuloPageState();
+  State<DetallesProductoPage> createState() => _DetallesProductoPageState();
 }
 
-class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
-  List<CategoriaProductoRequest> _listaTipoArticulos = [];
-
-  ProductoController productoController = ProductoController();
-
-  final _formKey = GlobalKey<FormState>();
-  bool _enEspera = false;
-  final _actualizadoInputFechaIngreso = TextEditingController();
-
+class _DetallesProductoPageState extends State<DetallesProductoPage> {
   ProductoRequest productoRequest = ProductoRequest();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    inicializacion();
-  }
-
-  inicializacion() async {
-    _listaTipoArticulos = await productoController.listarCategoriaProductos();
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
+    productoRequest =
+        ModalRoute.of(context)!.settings.arguments as ProductoRequest;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Registrar Articulo'),
+          title: const Text('Detalles Producto'),
         ),
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
@@ -52,7 +32,6 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
     return Stack(
       children: [
         _head(),
-        //_botonFiltrar(),
       ],
     );
   }
@@ -65,32 +44,12 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
         width: Adapt.wp(90, context),
         child: SingleChildScrollView(
           child: Form(
-            key: _formKey,
             child: Column(
               children: [
                 SizedBox(height: Adapt.hp(3, context)),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 4,
-                      child: _codigoProducto(),
-                    ),
-                    SizedBox(width: Adapt.wp(2, context)),
-                    Expanded(
-                      flex: 1,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          await productoController.leerCodigoDeBarras(context);
-                        },
-                        child: Icon(Icons.qr_code_scanner_outlined),
-                      ),
-                    ),
-                  ],
-                ),
+                _codigoProducto(),
                 SizedBox(height: Adapt.hp(3, context)),
                 _nombreProductoText(),
-                SizedBox(height: Adapt.hp(3, context)),
-                _listaTipoArticulo(),
                 SizedBox(height: Adapt.hp(3, context)),
                 _precioCompraArticulo(),
                 SizedBox(height: Adapt.hp(3, context)),
@@ -104,8 +63,6 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
                 SizedBox(height: Adapt.hp(3, context)),
                 _descripcionProducto(),
                 SizedBox(height: Adapt.hp(3, context)),
-                _botonCrearProducto(),
-                SizedBox(height: Adapt.hp(3, context)),
               ],
             ),
           ),
@@ -116,6 +73,8 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
 
   Widget _nombreProductoText() {
     return TextFormField(
+      enabled: false,
+      initialValue: productoRequest.nombre,
       keyboardType: TextInputType.text,
       decoration: const InputDecoration(
         enabledBorder: OutlineInputBorder(
@@ -135,7 +94,6 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
         ),
         labelStyle: TextStyle(color: Colors.black),
       ),
-      onSaved: (value) => productoRequest.nombre = value!,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Ingrese un nombre';
@@ -147,6 +105,8 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
 
   Widget _codigoProducto() {
     return TextFormField(
+      enabled: false,
+      initialValue: productoRequest.codigo,
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         enabledBorder: OutlineInputBorder(
@@ -166,7 +126,6 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
         ),
         labelStyle: TextStyle(color: Colors.black),
       ),
-      onSaved: (value) => productoRequest.codigo = value!,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Ingrese un nombre';
@@ -178,6 +137,8 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
 
   Widget _precioVentaProducto() {
     return TextFormField(
+      enabled: false,
+      initialValue: productoRequest.precioVenta.toString(),
       keyboardType: TextInputType.text,
       decoration: const InputDecoration(
         enabledBorder: OutlineInputBorder(
@@ -197,7 +158,6 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
         ),
         labelStyle: TextStyle(color: Colors.black),
       ),
-      onSaved: (value) => productoRequest.precioVenta = int.parse(value!),
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Ingrese un nombre';
@@ -209,6 +169,8 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
 
   Widget _precioCompraArticulo() {
     return TextFormField(
+      enabled: false,
+      initialValue: productoRequest.precioCompra.toString(),
       keyboardType: TextInputType.text,
       decoration: const InputDecoration(
         enabledBorder: OutlineInputBorder(
@@ -228,8 +190,6 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
         ),
         labelStyle: TextStyle(color: Colors.black),
       ),
-      onSaved: (value) => productoRequest.precioCompra =
-          int.parse(value!), //_reporteFiltroRequest.nombre = value!,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Ingrese un nombre';
@@ -241,6 +201,8 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
 
   Widget _cantidadProductoNum() {
     return TextFormField(
+      enabled: false,
+      initialValue: productoRequest.cantidad.toString(),
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         enabledBorder: OutlineInputBorder(
@@ -260,8 +222,6 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
         ),
         labelStyle: TextStyle(color: Colors.black),
       ),
-      onSaved: (value) => productoRequest.cantidad =
-          int.parse(value!), //_reporteFiltroRequest.nombre = value!,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Ingrese un nombre';
@@ -273,6 +233,8 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
 
   Widget _pesoProducto() {
     return TextFormField(
+      enabled: false,
+      initialValue: productoRequest.peso.toString(),
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         enabledBorder: OutlineInputBorder(
@@ -292,7 +254,6 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
         ),
         labelStyle: TextStyle(color: Colors.black),
       ),
-      onSaved: (value) => productoRequest.peso = int.parse(value!),
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Ingrese un nombre';
@@ -302,112 +263,10 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
     );
   }
 
-  Widget _listaTipoArticulo() {
-    return DropdownButtonFormField<String>(
-      hint: const Text('Seleccione una tipo',
-          style: TextStyle(
-            color: Colors.black,
-            fontFamily: 'CaviarDreamsRegular',
-          )),
-      onSaved: (value) => productoRequest.idCategory = int.parse(value!),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Seleccione una tipo';
-        }
-        return null;
-      },
-      isExpanded: true,
-      icon: const Icon(Icons.arrow_downward),
-      elevation: 16,
-      style: const TextStyle(
-        color: Colors.black,
-      ),
-      items: _listaTipoArticulos.map((CategoriaProductoRequest value) {
-        return DropdownMenuItem<String>(
-          onTap: () {
-            productoRequest.categoria = value.name;
-          },
-          value: value.id,
-          child: Text(value.name,
-              style: const TextStyle(
-                color: Colors.black,
-                fontFamily: 'CaviarDreamsRegular',
-              )),
-        );
-      }).toList(),
-      onChanged: (String? newValue) {
-        setState(() {
-          newValue;
-        });
-      },
-      decoration: const InputDecoration(
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue),
-        ),
-        prefixIcon: Icon(Icons.calendar_month_outlined),
-        counterText: "",
-        hintText: 'Seleccione un tipo de articulo',
-        label: Text(
-          'Tipo de articulo',
-          style: TextStyle(
-            color: Colors.black,
-          ),
-        ),
-        labelStyle: TextStyle(color: Colors.black),
-      ),
-    );
-  }
-
-  Widget _botonCrearProducto() {
-    return SizedBox(
-      width: Adapt.wp(70, context),
-      height: Adapt.hp(6, context),
-      child: ElevatedButton(
-        child: _enEspera
-            ? Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
-                SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(width: 10),
-                Text("Espere un momento...")
-              ])
-            : Text("Registrar incidente",
-                style: TextStyle(fontSize: Adapt.px(25), color: Colors.white)),
-        onPressed: () async {
-          if (_formKey.currentState!.validate()) {
-            _formKey.currentState!.save();
-
-            String fechaActual = DateTime.now().toString().substring(0, 10);
-            productoRequest.fechaIngreso = fechaActual;
-            productoRequest.categoria = "Alimentos secos";
-
-            print(productoRequest.toJson());
-
-            setState(() {
-              _enEspera = true;
-            });
-
-            _enEspera = await productoController.registrarProducto(
-                context, productoRequest);
-          }
-          setState(() {});
-        },
-      ),
-    );
-  }
-
   Widget _fechaExpiracionText() {
     return TextFormField(
-      controller: _actualizadoInputFechaIngreso,
-      onSaved: (value) => productoRequest.fechaExpiracion = value!,
-      //validator: (value) => value!.isEmpty ? 'Ingrese la fecha' : null,
+      enabled: false,
+      initialValue: productoRequest.fechaExpiracion,
       onTap: () async {
         DateTime? newDateTime = await showDatePicker(
             builder: (BuildContext context, Widget? child) {
@@ -428,7 +287,6 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
         }
         String fechaBusqueda = newDateTime.toString().substring(0, 10);
         //fechaBusqueda = fechaBusqueda.replaceAll('-', '/');
-        _actualizadoInputFechaIngreso.text = fechaBusqueda;
       },
       readOnly: true,
       style: const TextStyle(color: Colors.black),
@@ -458,6 +316,8 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
 
   Widget _descripcionProducto() {
     return TextFormField(
+      enabled: false,
+      initialValue: productoRequest.descripcion,
       minLines: 3,
       maxLines: 5,
       keyboardType: TextInputType.text,
@@ -479,8 +339,6 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
         ),
         labelStyle: TextStyle(color: Colors.black),
       ),
-      onSaved: (value) => productoRequest.descripcion =
-          value!, //_reporteFiltroRequest.nombre = value!,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Ingrese un nombre';

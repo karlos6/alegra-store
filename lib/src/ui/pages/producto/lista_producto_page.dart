@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import '../../../domain/requests/producto_request.dart';
+import '../../utilities/mensajesAlerta.dart';
 import '../../utilities/menu.dart';
 import '../../utilities/responsive.dart';
 
@@ -103,7 +104,10 @@ class _ListaArticuloState extends State<ListaArticulo> {
                   children: [
                     Text('Código: ${listaProductos[index].codigo}'),
                     Text('Tipo: ${listaProductos[index].categoria}'),
-                    //Text('Precio: ${listaProductos[index].precio}'),
+                    Text(
+                        'Precio de compra: ${listaProductos[index].precioCompra}'),
+                    Text(
+                        'Precio de venta: ${listaProductos[index].precioVenta}'),
                     Text('Cantidad: ${listaProductos[index].cantidad}'),
                     Text(
                         'Fecha expiración: ${listaProductos[index].fechaExpiracion}'),
@@ -149,7 +153,7 @@ class _ListaArticuloState extends State<ListaArticulo> {
         padding: const EdgeInsets.all(3),
         child: InkWell(
           onTap: () {
-            Navigator.pushNamed(context, 'detallesIncidentes',
+            Navigator.pushNamed(context, 'detalles_producto',
                 arguments: listaProductos[index]);
           },
           child: const Icon(
@@ -173,16 +177,15 @@ class _ListaArticuloState extends State<ListaArticulo> {
         padding: const EdgeInsets.all(3),
         child: InkWell(
           onTap: () async {
-            // bool seleccion = await alertaRetornoBoleano(context,
-            //     "Eliminar incidente", "¿Está seguro de eliminar el incidente?");
-            // if (seleccion) {
-            //   await incidenteController.eliminarIncidente(
-            //       context,
-            //       listaProductos[index].id,
-            //       listaProductos[index].pictureIncident);
-            //   listaProductos.removeAt(index);
-            //   setState(() {});
-            // }
+            bool seleccion = await alertaRetornoBoleano(context,
+                "Eliminar producto", "¿Está seguro de eliminar el producto?");
+            if (seleccion) {
+              // ignore: use_build_context_synchronously
+              await productoController.eliminarProducto(
+                  context, listaProductos[index]);
+              listaProductos.removeAt(index);
+              setState(() {});
+            }
           },
           child: const Icon(
             Icons.delete,
