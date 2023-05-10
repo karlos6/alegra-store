@@ -4,6 +4,7 @@ import 'package:alegra_store/src/ui/pages/producto/producto_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import '../../../domain/requests/categoria_producto_request.dart';
 import '../../../domain/requests/producto_request.dart';
 import '../../utilities/mensajesAlerta.dart';
 import '../../utilities/menu.dart';
@@ -21,6 +22,9 @@ class _ListaArticuloState extends State<ListaArticulo> {
   ScrollController scrollController = ScrollController();
   bool isVisible = true;
   ProductoController productoController = ProductoController();
+  final _formKey = GlobalKey<FormState>();
+  List<CategoriaProductoRequest> _listaTipoArticulos = [];
+  TextEditingController codigoProductoController = TextEditingController();
 
   @override
   void initState() {
@@ -52,6 +56,7 @@ class _ListaArticuloState extends State<ListaArticulo> {
 
   inicializarListaProductos() async {
     listaProductos = await productoController.listarProductos();
+    _listaTipoArticulos = await productoController.listarCategoriaProductos();
     setState(() {});
   }
 
@@ -80,7 +85,7 @@ class _ListaArticuloState extends State<ListaArticulo> {
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 30)),
               ),
-        _registrarProductoBoton(),
+        _rowBotonesProducto(),
       ],
     );
   }
@@ -220,29 +225,166 @@ class _ListaArticuloState extends State<ListaArticulo> {
     );
   }
 
-  Padding _registrarProductoBoton() {
+  Padding _rowBotonesProducto() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.only(bottom: 20, right: 20, left: 20),
       child: Align(
         alignment: Alignment.bottomCenter,
         child: AnimatedContainer(
             duration: const Duration(milliseconds: 400),
             height: isVisible ? 60.0 : 0.0,
             child: Center(
-              child: SizedBox(
-                width: Adapt.wp(70, context),
-                height: Adapt.hp(6, context),
-                child: ElevatedButton(
-                  child: Text("Registrar producto",
-                      style: TextStyle(
-                          fontSize: Adapt.px(25), color: Colors.white)),
-                  onPressed: () {
-                    Navigator.pushNamed(context, 'registrar_articulo');
-                  },
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: SizedBox(
+                      width: Adapt.wp(40, context),
+                      height: Adapt.hp(6, context),
+                      child: ElevatedButton(
+                        child: Text("Filtrar",
+                            style: TextStyle(
+                                fontSize: Adapt.px(25), color: Colors.white)),
+                        onPressed: () {
+                          _filtroMensajeAlerta();
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: SizedBox(
+                      width: Adapt.wp(70, context),
+                      height: Adapt.hp(6, context),
+                      child: ElevatedButton(
+                        child: Text("Registrar producto",
+                            style: TextStyle(
+                                fontSize: Adapt.px(25), color: Colors.white)),
+                        onPressed: () {
+                          Navigator.pushNamed(context, 'registrar_articulo');
+                        },
+                      ),
+                    ),
+                  )
+                ],
               ),
             )),
       ),
+    );
+  }
+
+  _filtroMensajeAlerta() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)),
+            title: const Text(
+              "Filtrar",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+              ),
+            ),
+            content: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: Adapt.hp(3, context)),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 4,
+                        child: _codigoProducto(),
+                      ),
+                      SizedBox(width: Adapt.wp(2, context)),
+                      Expanded(
+                        flex: 1,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            codigoProductoController.text =
+                                await productoController
+                                    .leerCodigoDeBarras(context);
+                          },
+                          child: const Icon(Icons.qr_code_scanner_outlined),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Cancelar")),
+              TextButton(
+                  onPressed: () async {
+                    codigoProductoController.text = "";
+                    Navigator.pop(context);
+                    listaProductos = await productoController.listarProductos();
+                    setState(() {});
+                  },
+                  child: const Text("Limpiar")),
+              TextButton(
+                  onPressed: () async {
+                    _formKey.currentState!.save();
+                    if (codigoProductoController.text.isEmpty) {
+                      mensajeAlerta(context, "Alerta Filtro",
+                          "Ingrese el código para realizar la busqueda");
+                    } else {
+                      Navigator.pop(context);
+                      //  _listaReportes.clear();
+                      print(codigoProductoController.text);
+                      listaProductos = await productoController
+                          .buscarProducto(codigoProductoController.text);
+
+                      setState(() {});
+                    }
+                  },
+                  child: const Text("Filtrar")),
+            ],
+          );
+        });
+  }
+
+  Widget _codigoProducto() {
+    return TextFormField(
+      controller: codigoProductoController,
+      keyboardType: TextInputType.number,
+      decoration: const InputDecoration(
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.blue),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.blue),
+        ),
+        prefixIcon: Icon(Icons.qr_code, color: Colors.blue),
+        counterText: "",
+        hintText: 'ingrese un precio',
+        label: Text(
+          'Codigo del producto',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        labelStyle: TextStyle(color: Colors.black),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Ingrese un nombre';
+        }
+        return null;
+      },
     );
   }
 }

@@ -33,11 +33,9 @@ class _ScannerPageState extends State<ScannerPage> {
     ReporteRequest? data =
         await _reporteController.scannerProduct(barcodeScanRes);
     if (data != null) {
-      producto.itemName = data.itemName;
-      producto.itemCode = data.itemCode;
-      producto.quantity = data.quantity;
-
-     
+      producto.nombre = data.nombre;
+      producto.codigo = data.codigo;
+      producto.cantidad = data.cantidad;
     } else {
       displayDialogAndroid(context, barcodeScanRes);
     }
@@ -58,12 +56,12 @@ class _ScannerPageState extends State<ScannerPage> {
 
   List<Widget> productData(TextStyle fontSize30) {
     List<Widget> data;
-    if (producto.itemName != "") {
+    if (producto.nombre != "") {
       data = [
         Text('Información producto', style: fontSize30),
-        Text('Nombre: ${producto.itemName}', style: fontSize30),
-        Text('Código: ${producto.itemCode}', style: fontSize30),
-        Text('Existencias: ${producto.quantity}', style: fontSize30),
+        Text('Nombre: ${producto.nombre}', style: fontSize30),
+        Text('Código: ${producto.codigo}', style: fontSize30),
+        Text('Existencias: ${producto.cantidad}', style: fontSize30),
       ];
     } else {
       data = [];

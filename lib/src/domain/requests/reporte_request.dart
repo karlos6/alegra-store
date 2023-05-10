@@ -1,31 +1,29 @@
 class ReporteRequest {
-  String id = '';
-  String itemCode = '';
-  String itemName = '';
-  String typeItem = '';
-  int quantity = 0;
-  int price = 0;
-  String createDate = '';
+  String codigo = '';
+  String nombre = '';
+  String categoria = '';
+  String fechaExpiracion = '';
+  String fechaIngreso = '';
+  int cantidad = 0;
+  int peso = 0;
+  String descripcion = '';
+  int precioVenta = 0;
+  int precioCompra = 0;
+  int idCategory = 0;
 
   ReporteRequest();
 
   ReporteRequest.fromJson(Map<String, dynamic> json) {
-    id = json['id'].toString();
-    itemCode = json['ItemCode'] ?? '';
-    itemName = json['ItemName'] ?? '';
-    typeItem = json['TypeItem'] ?? '';
-    quantity = json['Quantity'] ?? 0;
-    price = json['Price'] ?? 0;
-    createDate = json['CreateDate'] ?? '';
+    codigo = json['code'] ?? '';
+    nombre = json['name'] ?? '';
+    categoria = json['categoryName'] ?? '';
+    peso = json['weight'] ?? 0;
+    cantidad = json['quantity'] ?? 0;
+    fechaIngreso = json['entryDate'] ?? '';
+    fechaExpiracion = json['expirationDate'] ?? '';
+    descripcion = json['description'] ?? '';
+    precioVenta = json['salePrice'] ?? 0;
+    precioCompra = json['purchasePrice'] ?? 0;
+    idCategory = json['idCategory'] ?? 0;
   }
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'ItemCode': itemCode,
-        'ItemName': itemName,
-        'TypeItem': typeItem,
-        'Quantity': quantity,
-        'Price': price,
-        'CreateDate': createDate,
-      };
 }

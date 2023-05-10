@@ -11,12 +11,16 @@ import '../../domain/requests/reporte_filtro_request.dart';
 class ReporteHttp extends ReporteRepositories {
   @override
   Future<List<ReporteRequest>> reporteGeneral() async {
-    final url = '${Env.rutaApi}/articles';
+    final url = '${Env.rutaApi}/getProducts';
 
     try {
-      final res = await http.get(
+      final res = await http.post(
         Uri.parse(url),
       );
+
+      print("entro a reporte general");
+      print(res.statusCode);
+      print(res.body);
 
       if (res.statusCode == 200) {
         List serviceResponse = json.decode(res.body);

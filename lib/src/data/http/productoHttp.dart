@@ -87,11 +87,31 @@ class ProductoHttp extends ProductoRepositories {
   }
 
   @override
-  Future<List<ProductoRequest>> buscarProducto(String nombre) {
-    ProductoRequest producto = ProductoRequest();
+  Future<List<ProductoRequest>> buscarProducto(String codeFiltro) async {
+    final url = '${Env.rutaApi}/getProducts';
 
-    // TODO: implement buscarProducto
-    throw UnimplementedError();
+    print("dentra a buscar producto");
+
+    final body = {
+      "code": codeFiltro,
+    };
+
+    try {
+      final res = await http.post(
+        Uri.parse(url),
+        body: json.encode(body),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (res.statusCode == 200) {
+        List serviceResponse = json.decode(res.body);
+        return serviceResponse.map((e) => ProductoRequest.fromJson(e)).toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return [];
+    }
   }
 
   @override
@@ -130,8 +150,11 @@ class ProductoHttp extends ProductoRepositories {
         body: body,
         headers: {"Content-Type": "application/json"},
       );
+      print("actualizar producto");
+      print(res.statusCode);
+      print(res.body);
 
-      if (res.statusCode == 201) {
+      if (res.statusCode == 200) {
         return true;
       } else {
         return false;

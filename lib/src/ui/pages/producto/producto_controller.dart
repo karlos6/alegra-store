@@ -33,8 +33,8 @@ class ProductoController {
     return verificar;
   }
 
-  Future<List<ProductoRequest>> buscarProducto(String nombre) async {
-    return await productoHttp.buscarProducto(nombre);
+  Future<List<ProductoRequest>> buscarProducto(String codeFiltro) async {
+    return await productoHttp.buscarProducto(codeFiltro);
   }
 
   Future<bool> eliminarProducto(

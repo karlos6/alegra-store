@@ -29,11 +29,11 @@ class _MenuState extends State<Menu> {
               Icons.inventory_rounded,
             ),
             title: Text(
-              'Articulo',
+              'Productos',
               style: TextStyle(color: Colors.blueGrey[600]),
             ),
             onTap: () {
-              Navigator.pushNamed(context, 'registrar_articulo');
+              Navigator.pushNamed(context, 'lista_articulo');
             },
           ),
           ListTile(

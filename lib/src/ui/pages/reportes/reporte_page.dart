@@ -161,12 +161,15 @@ class _ReportePageState extends State<ReportePage> {
       sortAscending: _isAscending,
       rows: listaReportes.map((item) {
         return DataRow(cells: [
-          DataCell(Text(item.itemCode.toString())),
-          DataCell(Text(item.itemName)),
-          DataCell(Text(item.typeItem.toString())),
-          DataCell(Text(item.price.toString())),
-          DataCell(Text(item.quantity.toString())),
-          DataCell(Text(item.createDate.toString())),
+          DataCell(Text(item.codigo.toString())),
+          DataCell(Text(item.nombre)),
+          DataCell(Text(item.categoria)),
+          DataCell(Text(item.precioCompra.toString())),
+          DataCell(Text(item.precioVenta.toString())),
+          DataCell(Text(item.cantidad.toString())),
+          DataCell(Text(item.peso.toString())),
+          DataCell(Text(item.fechaIngreso.toString())),
+          DataCell(Text(item.fechaExpiracion.toString())),
         ]);
       }).toList(),
       columns: [
@@ -182,17 +185,18 @@ class _ReportePageState extends State<ReportePage> {
                   _isAscending = false;
                   // sort the product list in Ascending, order by nombre
                   listaReportes.sort((productA, productB) =>
-                      (productB.itemName.compareTo(productA.itemName)));
+                      (productB.nombre.compareTo(productA.nombre)));
                 } else {
                   _isAscending = true;
                   // sort the product list in Descending, order by nombre
                   listaReportes.sort((productA, productB) =>
-                      productA.itemName.compareTo(productB.itemName));
+                      productA.nombre.compareTo(productB.nombre));
                 }
               });
             }),
         DataColumn(
-            label: const Text('Tipo', style: TextStyle(color: Colors.blue)),
+            label:
+                const Text('Categoria', style: TextStyle(color: Colors.blue)),
             onSort: (columnIndex, _) {
               setState(() {
                 _currentSortColumn = columnIndex;
@@ -200,18 +204,19 @@ class _ReportePageState extends State<ReportePage> {
                   _isAscending = false;
                   // sort the product list in Ascending, order by tipo
                   listaReportes.sort((productA, productB) =>
-                      productB.typeItem.compareTo(productA.typeItem));
+                      productB.categoria.compareTo(productA.categoria));
                 } else {
                   _isAscending = true;
                   // sort the product list in Descending, order by tipo
                   listaReportes.sort((productA, productB) =>
-                      productA.typeItem.compareTo(productB.typeItem));
+                      productA.categoria.compareTo(productB.categoria));
                 }
               });
             }),
+        const DataColumn(label: Text('Precio compra')),
         DataColumn(
             label: const Text(
-              'precio',
+              'Precio venta',
               style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
             ),
             // Sorting function
@@ -222,17 +227,19 @@ class _ReportePageState extends State<ReportePage> {
                   _isAscending = false;
                   // sort the product list in Ascending, order by precio
                   listaReportes.sort((productA, productB) =>
-                      productB.price.compareTo(productA.price));
+                      productB.precioVenta.compareTo(productA.precioVenta));
                 } else {
                   _isAscending = true;
                   // sort the product list in Descending, order by precio
                   listaReportes.sort((productA, productB) =>
-                      productA.price.compareTo(productB.price));
+                      productA.precioVenta.compareTo(productB.precioVenta));
                 }
               });
             }),
         const DataColumn(label: Text('Cantidad')),
-        const DataColumn(label: Text('Fecha')),
+        const DataColumn(label: Text('Pesos')),
+        const DataColumn(label: Text('Fecha Ingreso')),
+        const DataColumn(label: Text('Fecha Expiración')),
       ],
     );
   }
