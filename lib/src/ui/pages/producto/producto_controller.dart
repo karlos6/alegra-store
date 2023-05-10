@@ -52,14 +52,29 @@ class ProductoController {
     return verificar;
   }
 
-  leerCodigoDeBarras(BuildContext context) async {
+  Future<String> leerCodigoDeBarras(BuildContext context) async {
     String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
         '#3D8BEF', 'Cancelar', false, ScanMode.BARCODE);
 
     if (barcodeScanRes == "-1") {
-      return;
+      return "";
     }
-
+    print("Codigo de barras: ");
     print(barcodeScanRes);
+    return barcodeScanRes;
+  }
+
+  Future actualizarProducto(
+      BuildContext context, ProductoRequest producto) async {
+    bool verificar = await productoHttp.actualizarProducto(producto);
+
+    if (verificar) {
+      creadoExitoso(
+          context, "La producto se actualizó correctamente", 'lista_articulo');
+    } else {
+      mensajeAlerta(
+          context, "Error al actualizar el producto", "No se pudo actualizar");
+    }
+    return verificar;
   }
 }

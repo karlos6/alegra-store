@@ -51,15 +51,17 @@ class _DetallesProductoPageState extends State<DetallesProductoPage> {
                 SizedBox(height: Adapt.hp(3, context)),
                 _nombreProductoText(),
                 SizedBox(height: Adapt.hp(3, context)),
+                _categotiaProductoText(),
+                SizedBox(height: Adapt.hp(3, context)),
                 _precioCompraArticulo(),
                 SizedBox(height: Adapt.hp(3, context)),
                 _precioVentaProducto(),
                 SizedBox(height: Adapt.hp(3, context)),
+                _cantidadProductoNum(),
+                SizedBox(height: Adapt.hp(3, context)),
                 _pesoProducto(),
                 SizedBox(height: Adapt.hp(3, context)),
                 _fechaExpiracionText(),
-                SizedBox(height: Adapt.hp(3, context)),
-                _cantidadProductoNum(),
                 SizedBox(height: Adapt.hp(3, context)),
                 _descripcionProducto(),
                 SizedBox(height: Adapt.hp(3, context)),
@@ -88,6 +90,38 @@ class _DetallesProductoPageState extends State<DetallesProductoPage> {
         hintText: 'ingrese un nombre',
         label: Text(
           'Nombre del producto',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        labelStyle: TextStyle(color: Colors.black),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Ingrese un nombre';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _categotiaProductoText() {
+    return TextFormField(
+      enabled: false,
+      initialValue: productoRequest.categoria,
+      keyboardType: TextInputType.text,
+      decoration: const InputDecoration(
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.blue),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.blue),
+        ),
+        prefixIcon: Icon(Icons.point_of_sale_outlined, color: Colors.blue),
+        counterText: "",
+        hintText: 'ingrese un nombre',
+        label: Text(
+          'Tipo de producto',
           style: TextStyle(
             color: Colors.black,
           ),

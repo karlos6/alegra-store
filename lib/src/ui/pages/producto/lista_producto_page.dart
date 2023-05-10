@@ -208,7 +208,7 @@ class _ListaArticuloState extends State<ListaArticulo> {
         padding: const EdgeInsets.all(3),
         child: InkWell(
           onTap: () {
-            Navigator.pushNamed(context, 'actualizarIncidentes',
+            Navigator.pushNamed(context, 'actualizar_producto',
                 arguments: listaProductos[index]);
           },
           child: const Icon(

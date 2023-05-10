@@ -7,4 +7,5 @@ abstract class ProductoRepositories {
   Future<bool> registrarProducto(ProductoRequest producto);
   Future<List<ProductoRequest>> buscarProducto(String nombre);
   Future<bool> eliminarProducto(ProductoRequest producto);
+  Future<bool> actualizarProducto(ProductoRequest producto);
 }

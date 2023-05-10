@@ -117,4 +117,28 @@ class ProductoHttp extends ProductoRepositories {
       return false;
     }
   }
+
+  @override
+  Future<bool> actualizarProducto(ProductoRequest producto) async {
+    final url = '${Env.rutaApi}/products';
+
+    var body = json.encode(producto.toJson());
+
+    try {
+      final res = await http.put(
+        Uri.parse(url),
+        body: body,
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (res.statusCode == 201) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }

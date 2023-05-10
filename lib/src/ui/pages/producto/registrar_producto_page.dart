@@ -13,6 +13,7 @@ class RegistrarArticuloPage extends StatefulWidget {
 
 class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
   List<CategoriaProductoRequest> _listaTipoArticulos = [];
+  TextEditingController codigoProductoController = TextEditingController();
 
   ProductoController productoController = ProductoController();
 
@@ -80,9 +81,11 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
                       flex: 1,
                       child: ElevatedButton(
                         onPressed: () async {
-                          await productoController.leerCodigoDeBarras(context);
+                          codigoProductoController.text =
+                              await productoController
+                                  .leerCodigoDeBarras(context);
                         },
-                        child: Icon(Icons.qr_code_scanner_outlined),
+                        child: const Icon(Icons.qr_code_scanner_outlined),
                       ),
                     ),
                   ],
@@ -147,6 +150,7 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
 
   Widget _codigoProducto() {
     return TextFormField(
+      controller: codigoProductoController,
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         enabledBorder: OutlineInputBorder(

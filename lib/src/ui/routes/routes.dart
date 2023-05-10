@@ -1,3 +1,4 @@
+import 'package:alegra_store/src/ui/pages/producto/actualizar_producto_page.dart';
 import 'package:alegra_store/src/ui/pages/producto/lista_producto_page.dart';
 import 'package:alegra_store/src/ui/pages/producto/registrar_producto_page.dart';
 import 'package:alegra_store/src/ui/pages/reportes/reporte_page.dart';
@@ -30,6 +31,7 @@ class _RoutesState extends State<Routes> {
         'registrar_articulo': (context) => const RegistrarArticuloPage(),
         'lista_articulo': (context) => const ListaArticulo(),
         "detalles_producto": (context) => const DetallesProductoPage(),
+        "actualizar_producto": (context) => const ActualizarProductoPage(),
       },
     );
   }
