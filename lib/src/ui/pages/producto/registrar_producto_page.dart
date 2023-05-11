@@ -390,9 +390,6 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
 
             String fechaActual = DateTime.now().toString().substring(0, 10);
             productoRequest.fechaIngreso = fechaActual;
-            productoRequest.categoria = "Alimentos secos";
-
-            print(productoRequest.toJson());
 
             setState(() {
               _enEspera = true;
