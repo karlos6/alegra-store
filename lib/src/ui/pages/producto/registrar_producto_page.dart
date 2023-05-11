@@ -40,7 +40,7 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Registrar Articulo'),
+          title: const Text('Registrar Producto'),
         ),
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
@@ -382,7 +382,7 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
                 SizedBox(width: 10),
                 Text("Espere un momento...")
               ])
-            : Text("Registrar incidente",
+            : Text("Registrar producto",
                 style: TextStyle(fontSize: Adapt.px(25), color: Colors.white)),
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
