@@ -48,6 +48,8 @@ class ProductoHttp extends ProductoRepositories {
         headers: {"Content-Type": "application/json"},
       );
 
+      print(body);
+
       if (res.statusCode == 201) {
         return true;
       } else {

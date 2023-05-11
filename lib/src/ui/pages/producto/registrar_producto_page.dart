@@ -182,7 +182,7 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
 
   Widget _precioVentaProducto() {
     return TextFormField(
-      keyboardType: TextInputType.text,
+      keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.blue),
@@ -213,7 +213,7 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
 
   Widget _precioCompraArticulo() {
     return TextFormField(
-      keyboardType: TextInputType.text,
+      keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.blue),
