@@ -425,7 +425,7 @@ class _RegistrarArticuloPageState extends State<RegistrarArticuloPage> {
             context: context,
             initialDate: DateTime.now(),
             firstDate: DateTime(1900),
-            lastDate: (DateTime.now()).add(const Duration(days: 1000)));
+            lastDate: (DateTime.now()).add(const Duration(days: 3000)));
 
         if (newDateTime == null) {
           return;
