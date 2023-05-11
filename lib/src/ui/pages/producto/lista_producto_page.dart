@@ -81,7 +81,7 @@ class _ListaArticuloState extends State<ListaArticulo> {
         listaProductos.isNotEmpty
             ? _listaProductos()
             : const Center(
-                child: Text('',
+                child: Text('No hay registros',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 30)),
               ),
