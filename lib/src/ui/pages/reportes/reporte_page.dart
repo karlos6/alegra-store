@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:alegra_store/src/data/http/reporteHttp.dart';
 import 'package:alegra_store/src/domain/requests/reporte_filtro_request.dart';
 import 'package:alegra_store/src/domain/requests/reporte_request.dart';
 import 'package:alegra_store/src/ui/pages/reportes/reporte_controller.dart';
@@ -9,6 +6,7 @@ import 'package:alegra_store/src/ui/utilities/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import '../../../domain/requests/categoria_producto_request.dart';
 import '../../utilities/responsive.dart';
 
 class ReportePage extends StatefulWidget {
@@ -26,15 +24,7 @@ class _ReportePageState extends State<ReportePage> {
   final _actualizadoInputFechaSalida = TextEditingController();
   final ReporteController _reporteController = ReporteController();
   final ReporteFiltroRequest _reporteFiltroRequest = ReporteFiltroRequest();
-
-  final List<String> _listaTipoArticulos = [
-    "Alimentos",
-    "Bebidas",
-    "Higiene personal",
-    "Limpieza del hogar",
-    "Bebés",
-    "Juguetes"
-  ];
+  List<CategoriaProductoRequest> _listaTipoArticulos = [];
   int _currentSortColumn = 0;
   bool _isAscending = true;
   bool isVisible = true;
@@ -50,6 +40,8 @@ class _ReportePageState extends State<ReportePage> {
 
   _inicializacion() async {
     inicializarControlerScroll();
+    _listaTipoArticulos = await _reporteController.listarCategoriaReporte();
+    setState(() {});
   }
 
   inicializarControlerScroll() {
@@ -81,7 +73,7 @@ class _ReportePageState extends State<ReportePage> {
         appBar: AppBar(
           title: const Text('Reportes'),
         ),
-        drawer: Menu(),
+        drawer: const Menu(),
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
         body: _body(),
@@ -164,12 +156,15 @@ class _ReportePageState extends State<ReportePage> {
       sortAscending: _isAscending,
       rows: listaReportes.map((item) {
         return DataRow(cells: [
-          DataCell(Text(item.itemCode.toString())),
-          DataCell(Text(item.itemName)),
-          DataCell(Text(item.typeItem.toString())),
-          DataCell(Text(item.price.toString())),
-          DataCell(Text(item.quantity.toString())),
-          DataCell(Text(item.createDate.toString())),
+          DataCell(Text(item.codigo.toString())),
+          DataCell(Text(item.nombre)),
+          DataCell(Text(item.categoria)),
+          DataCell(Text(item.precioCompra.toString())),
+          DataCell(Text(item.precioVenta.toString())),
+          DataCell(Text(item.cantidad.toString())),
+          DataCell(Text(item.peso.toString())),
+          DataCell(Text(item.fechaIngreso.toString())),
+          DataCell(Text(item.fechaExpiracion.toString())),
         ]);
       }).toList(),
       columns: [
@@ -185,17 +180,18 @@ class _ReportePageState extends State<ReportePage> {
                   _isAscending = false;
                   // sort the product list in Ascending, order by nombre
                   listaReportes.sort((productA, productB) =>
-                      (productB.itemName.compareTo(productA.itemName)));
+                      (productB.nombre.compareTo(productA.nombre)));
                 } else {
                   _isAscending = true;
                   // sort the product list in Descending, order by nombre
                   listaReportes.sort((productA, productB) =>
-                      productA.itemName.compareTo(productB.itemName));
+                      productA.nombre.compareTo(productB.nombre));
                 }
               });
             }),
         DataColumn(
-            label: const Text('Tipo', style: TextStyle(color: Colors.blue)),
+            label:
+                const Text('Categoria', style: TextStyle(color: Colors.blue)),
             onSort: (columnIndex, _) {
               setState(() {
                 _currentSortColumn = columnIndex;
@@ -203,18 +199,19 @@ class _ReportePageState extends State<ReportePage> {
                   _isAscending = false;
                   // sort the product list in Ascending, order by tipo
                   listaReportes.sort((productA, productB) =>
-                      productB.typeItem.compareTo(productA.typeItem));
+                      productB.categoria.compareTo(productA.categoria));
                 } else {
                   _isAscending = true;
                   // sort the product list in Descending, order by tipo
                   listaReportes.sort((productA, productB) =>
-                      productA.typeItem.compareTo(productB.typeItem));
+                      productA.categoria.compareTo(productB.categoria));
                 }
               });
             }),
+        const DataColumn(label: Text('Precio compra')),
         DataColumn(
             label: const Text(
-              'precio',
+              'Precio venta',
               style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
             ),
             // Sorting function
@@ -225,17 +222,19 @@ class _ReportePageState extends State<ReportePage> {
                   _isAscending = false;
                   // sort the product list in Ascending, order by precio
                   listaReportes.sort((productA, productB) =>
-                      productB.price.compareTo(productA.price));
+                      productB.precioVenta.compareTo(productA.precioVenta));
                 } else {
                   _isAscending = true;
                   // sort the product list in Descending, order by precio
                   listaReportes.sort((productA, productB) =>
-                      productA.price.compareTo(productB.price));
+                      productA.precioVenta.compareTo(productB.precioVenta));
                 }
               });
             }),
         const DataColumn(label: Text('Cantidad')),
-        const DataColumn(label: Text('Fecha')),
+        const DataColumn(label: Text('Pesos')),
+        const DataColumn(label: Text('Fecha Ingreso')),
+        const DataColumn(label: Text('Fecha Expiración')),
       ],
     );
   }
@@ -290,9 +289,9 @@ class _ReportePageState extends State<ReportePage> {
               TextButton(
                   onPressed: () {
                     _formKey.currentState!.save();
-                    if (_reporteFiltroRequest.fechaFin.isEmpty &&
-                        _reporteFiltroRequest.fechaInicio.isEmpty &&
-                        _reporteFiltroRequest.tipo.isEmpty) {
+                    if (_reporteFiltroRequest.fechaFinal.isEmpty &&
+                        _reporteFiltroRequest.fechaIngreso.isEmpty &&
+                        _reporteFiltroRequest.idCategoria == 0) {
                       mensajeAlerta(context, "Alerta Filtro",
                           "Ingrese al menos un filtro para realizar la busqueda");
                     } else {
@@ -316,7 +315,13 @@ class _ReportePageState extends State<ReportePage> {
             color: Colors.black,
             fontFamily: 'CaviarDreamsRegular',
           )),
-      onSaved: (value) => _reporteFiltroRequest.tipo = value!,
+      onSaved: (value) {
+        if (value == null) {
+          _reporteFiltroRequest.idCategoria = 0;
+        } else {
+          _reporteFiltroRequest.idCategoria = int.parse(value);
+        }
+      },
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Seleccione una tipo';
@@ -329,10 +334,10 @@ class _ReportePageState extends State<ReportePage> {
       style: const TextStyle(
         color: Colors.black,
       ),
-      items: _listaTipoArticulos.map((String value) {
+      items: _listaTipoArticulos.map((CategoriaProductoRequest value) {
         return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value,
+          value: value.id,
+          child: Text(value.name,
               style: const TextStyle(
                 color: Colors.black,
                 fontFamily: 'CaviarDreamsRegular',
@@ -368,7 +373,7 @@ class _ReportePageState extends State<ReportePage> {
   Widget _fechaInicioText() {
     return TextFormField(
       controller: _actualizadoInputFechaIngreso,
-      onSaved: (value) => _reporteFiltroRequest.fechaInicio = value!,
+      onSaved: (value) => _reporteFiltroRequest.fechaIngreso = value!,
       //validator: (value) => value!.isEmpty ? 'Ingrese la fecha' : null,
       onTap: () async {
         DateTime? newDateTime = await showDatePicker(
@@ -383,13 +388,12 @@ class _ReportePageState extends State<ReportePage> {
             context: context,
             initialDate: DateTime.now(),
             firstDate: DateTime(1900),
-            lastDate: (DateTime.now()).add(const Duration(days: 0)));
+            lastDate: (DateTime.now()).add(const Duration(days: 3000)));
 
         if (newDateTime == null) {
           return;
         }
         String fechaBusqueda = newDateTime.toString().substring(0, 10);
-        fechaBusqueda = fechaBusqueda.replaceAll('-', '/');
         _actualizadoInputFechaIngreso.text = fechaBusqueda;
       },
       readOnly: true,
@@ -421,13 +425,13 @@ class _ReportePageState extends State<ReportePage> {
   Widget _fechaFinalText() {
     return TextFormField(
       controller: _actualizadoInputFechaSalida,
-      onSaved: (value) => _reporteFiltroRequest.fechaFin = value!,
+      onSaved: (value) => _reporteFiltroRequest.fechaFinal = value!,
       onTap: () async {
         DateTime? newDateTime = await showDatePicker(
             builder: (BuildContext context, Widget? child) {
               return Theme(
                 data: ThemeData.light().copyWith(
-                  colorScheme: ColorScheme.light(),
+                  colorScheme: const ColorScheme.light(),
                 ),
                 child: child!,
               );
@@ -435,13 +439,12 @@ class _ReportePageState extends State<ReportePage> {
             context: context,
             initialDate: DateTime.now(),
             firstDate: DateTime(1900),
-            lastDate: (DateTime.now()).add(const Duration(days: 0)));
+            lastDate: (DateTime.now()).add(const Duration(days: 3000)));
 
         if (newDateTime == null) {
           return;
         }
         String fechaBusqueda = newDateTime.toString().substring(0, 10);
-        fechaBusqueda = fechaBusqueda.replaceAll('-', '/');
         _actualizadoInputFechaSalida.text = fechaBusqueda;
       },
       readOnly: true,
@@ -467,50 +470,6 @@ class _ReportePageState extends State<ReportePage> {
         labelStyle: TextStyle(color: Colors.black),
       ),
       onChanged: (value) {},
-    );
-  }
-
-  Widget _tipoArticuloText() {
-    return TextFormField(
-      onSaved: (value) => _reporteFiltroRequest.tipo = value!,
-      validator: (value) {
-        if (value != null) {
-          //minimo 4
-          if (value.length < 4) {
-            return 'El nombre debe tener minimo 4 caracteres';
-          }
-          //maximo 50
-          if (value.length > 60) {
-            return 'El nombre debe tener maximo 60 caracteres';
-          }
-          if (!RegExp(r"^[a-zA-Z ]+$").hasMatch(value)) {
-            return 'Solo se permiten letras';
-          }
-        }
-
-        return null;
-      },
-      style: const TextStyle(color: Colors.black),
-      maxLength: 50,
-      keyboardType: TextInputType.text,
-      decoration: const InputDecoration(
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue),
-        ),
-        prefixIcon: Icon(Icons.shopping_bag_outlined),
-        hintText: 'Ingrese el tipo de articulo',
-        counterText: "",
-        label: Text(
-          'Tipo de articulo',
-          style: TextStyle(
-            color: Colors.black,
-          ),
-        ),
-        labelStyle: TextStyle(color: Colors.black),
-      ),
     );
   }
 }

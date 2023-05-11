@@ -16,13 +16,25 @@ class _MenuState extends State<Menu> {
         children: <Widget>[
           DrawerHeader(
             padding: const EdgeInsets.all(0),
-            decoration: BoxDecoration(),
+            decoration: const BoxDecoration(),
             child: SizedBox(
               child: Image.asset(
                 "assets/img/alegra_lingh.jpeg",
                 fit: BoxFit.fill,
               ),
             ),
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.inventory_rounded,
+            ),
+            title: Text(
+              'Productos',
+              style: TextStyle(color: Colors.blueGrey[600]),
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, 'lista_articulo');
+            },
           ),
           ListTile(
             leading: const Icon(

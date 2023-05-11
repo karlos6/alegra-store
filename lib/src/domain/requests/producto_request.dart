@@ -1,4 +1,4 @@
-class ReporteRequest {
+class ProductoRequest {
   String codigo = '';
   String nombre = '';
   String categoria = '';
@@ -11,9 +11,11 @@ class ReporteRequest {
   int precioCompra = 0;
   int idCategory = 0;
 
-  ReporteRequest();
+  //int precio = 0;
 
-  ReporteRequest.fromJson(Map<String, dynamic> json) {
+  ProductoRequest();
+
+  ProductoRequest.fromJson(Map<String, dynamic> json) {
     codigo = json['code'] ?? '';
     nombre = json['name'] ?? '';
     categoria = json['categoryName'] ?? '';
@@ -26,4 +28,18 @@ class ReporteRequest {
     precioCompra = json['purchasePrice'] ?? 0;
     idCategory = json['idCategory'] ?? 0;
   }
+
+  Map<String, dynamic> toJson() => {
+        'code': codigo,
+        'name': nombre,
+        'idCategory': idCategory,
+        "categoryName": categoria,
+        'weight': peso,
+        'quantity': cantidad,
+        'purchasePrice': precioCompra,
+        'salePrice': precioVenta,
+        'entryDate': fechaIngreso,
+        'expirationDate': fechaExpiracion,
+        'description': descripcion,
+      };
 }
