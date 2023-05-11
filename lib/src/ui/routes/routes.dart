@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 
 import '../pages/producto/detalles_producto_page.dart';
 
+import '../pages/repor_ventas/report_ventas_page.dart';
+
 class Routes extends StatefulWidget {
   const Routes({super.key});
 
@@ -28,6 +30,7 @@ class _RoutesState extends State<Routes> {
         '/': (context) => const RegistrarArticuloPage(),
         'informe': (context) => const ReportePage(),
         'scanner': (context) => const ScannerPage(),
+        'reportVentas': (context) => const ReporVentas(),
         'registrar_articulo': (context) => const RegistrarArticuloPage(),
         'lista_articulo': (context) => const ListaArticulo(),
         "detalles_producto": (context) => const DetallesProductoPage(),

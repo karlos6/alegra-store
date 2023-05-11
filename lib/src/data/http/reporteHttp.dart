@@ -8,6 +8,7 @@ import 'package:alegra_store/src/domain/requests/reporte_request.dart';
 import 'package:http/http.dart' as http;
 
 import '../../domain/requests/reporte_filtro_request.dart';
+import '../../domain/requests/reporte_ventas_request.dart';
 
 class ReporteHttp extends ReporteRepositories {
   @override
@@ -105,5 +106,31 @@ class ReporteHttp extends ReporteRepositories {
       print(e);
       return [];
     }
+  }
+
+  Future<List<ReporteVentasRequest>> sendRequest(
+      String url, dynamic data) async {
+    final request = http.Request('POST', Uri.parse(url));
+    request.body = json.encode(data);
+    request.headers['Content-Type'] = 'application/json; charset=UTF-8';
+
+    final response = await request.send();
+
+    if (response.statusCode == 200) {
+      final responseJson =
+          json.decode(await utf8.decodeStream(response.stream));
+      return responseJson
+          .map<ReporteVentasRequest>((e) => ReporteVentasRequest.fromJson(e))
+          .toList();
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<ReporteVentasRequest>> reportVentas(String mes) async {
+    final url = '${Env.rutaApi}/salesReport';
+    final data = {'saleDate': mes};
+    final responseJson = await sendRequest(url, data);
+    return responseJson;
   }
 }
